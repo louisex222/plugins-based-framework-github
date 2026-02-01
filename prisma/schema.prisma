@@ -1,0 +1,101 @@
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String   @id @default(uuid()) @db.Uuid // 📌 ID
+  email       String   @unique // 📌 登入帳號，必須唯一
+  password    String   // 📌 儲存 Hashed 密碼
+  name        String?  @db.Text // 📌 姓名
+  account     String   @unique // 📌 登入帳號，必須唯一
+  createdAt   DateTime @default(now()) // 📌 建立時間
+  avatarUrl   Bytes?   // 📌 頭像
+  isVerified  Boolean  @default(false) // 📌 驗證
+  state       String   @default("offline") // 📌 狀態
+  role        String   @default("user") // 📌 角色
+  tokenVersion Int     @default(0) // 📌 Token 版本
+  
+  
+  messages    ChatMessage[] 
+  gifts       Gift[]
+  tokens      Token[]
+  rooms       ChatRoom[]
+
+  @@map("users")
+}
+
+model ChatRoom {
+  id          String        @id @default(uuid()) @db.Uuid // 📌 ID
+  name        String?        @db.VarChar(255) // 📌 房間名稱
+  description String?       @db.Text // 📌 描述
+  createdById String?     @db.Uuid // 📌 建立者 ID
+  createdAt   DateTime     @default(now()) // 📌 建立時間
+  updatedAt   DateTime?      @updatedAt // 📌 自動更新的時間
+  streamKey   String?        @db.VarChar(255) // 📌 obs推流身份驗證
+  isLive      Boolean       @default(false) // 📌 是否正在直播
+  slug        String        @unique // 📌 slug obs對應房間名稱
+  endedAt     DateTime?     @default(now())// 📌 結束時間
+  category    String?       @default("common") // 📌 分類：hot, common
+  onlineCount Int           @default(0) // 📌 在線人數
+  avatarUrl   Bytes?   // 📌 頭像
+  messages    ChatMessage[]
+  gifts       Gift[]
+  users       User[]
+
+  @@map("chat_rooms")
+}
+
+model ChatMessage {
+  id        String   @id @default(uuid()) @db.Uuid // 📌 ID
+  userId    String   @db.Uuid // 📌 使用者 ID
+  roomId    String   @db.Uuid // 📌 房間 ID
+  content   String   @db.Text // 📌 消息內容
+  type      String?  @db.VarChar(50) // 📌 消息類型
+  createdAt DateTime @default(now()) // 📌 建立時間
+  
+  user      User     @relation(fields: [userId], references: [id])
+  room      ChatRoom @relation(fields: [roomId], references: [id])
+
+  @@map("chat_messages")
+}
+
+
+model Gift {
+  id        String   @id @default(uuid()) @db.Uuid // 📌 ID
+  userId    String   @db.Uuid // 📌 使用者 ID
+  roomId    String   @db.Uuid // 📌 房間 ID
+  type      GiftType // 📌 禮物類型
+  createdAt DateTime @default(now()) // 📌 建立時間
+  amount    Int      @default(0) // 📌 禮物數量
+  
+  user      User     @relation(fields: [userId], references: [id])
+  room      ChatRoom @relation(fields: [roomId], references: [id])
+
+  @@map("gift")
+}
+
+model Token {
+  id        String   @id @default(uuid()) @db.Uuid // 📌 ID
+  userId    String   @db.Uuid // 📌 使用者 ID
+  expiresAt DateTime @default(now())  // 📌 到期時間
+  createdAt DateTime @default(now()) // 📌 建立時間
+  token     String   @db.Text // 📌 Token
+
+  user      User     @relation(fields: [userId], references: [id])
+  
+  @@map("token")
+}
+
+
+
+enum GiftType {
+  HEART
+  CAR
+  DIAMOND
+}

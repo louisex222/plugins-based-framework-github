@@ -1,0 +1,39 @@
+# MediaMTX 生產環境配置
+# 詳細文件: https://github.com/bluenviron/mediamtx
+
+# 全域設定
+logLevel: info
+logDestinations: [stdout]
+readTimeout: 10s
+writeTimeout: 10s
+
+# RTMP 設定 (OBS 推流用)
+rtmp: yes
+rtmpAddress: :1935
+rtmpEncryption: no
+
+# HLS 設定 (網頁播放用)
+hls: yes
+hlsAddress: :8888
+hlsAlwaysRemux: no
+hlsVariant: lowLatency
+
+# WebRTC 設定 (低延遲播放用)
+webrtc: yes
+webrtcAddress: :8889
+webrtcAllowOrigins:
+  - "*"
+webrtcNote: "Railway 上需將 PORT 環境變數設為 8889 才能公開此服務，這會導致 HLS (8888) 無法透過同一網域訪問"
+
+# 權限控制 (身份驗證)
+authMethod: http
+# 注意: $BACKEND_API_URL 將在啟動時由 Docker 替換為實際的後端網址
+authHTTPAddress: $BACKEND_API_URL/api/stream/auth
+
+paths:
+  all:
+    # 當推流準備就緒時 (通知後端直播開始)
+    runOnReady: 'curl -m 5 -s -X POST $BACKEND_API_URL/api/stream/publish -H "Content-Type: application/json" -d "{\"slug\":\"$MTX_PATH\"}"'
+
+    # 當推流停止時 (通知後端直播結束)
+    runOnNotReady: 'curl -m 5 -s -X POST $BACKEND_API_URL/api/stream/unpublish -H "Content-Type: application/json" -d "{\"slug\":\"$MTX_PATH\"}"'

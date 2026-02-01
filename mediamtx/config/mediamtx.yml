@@ -1,0 +1,16 @@
+webrtc: yes
+webrtcAllowOrigins: ["*"]
+webrtcAddress: :8889
+webrtcLocalUDPAddress: :8189
+
+# 啟用 HTTP 身份驗證 (全域設定)
+authMethod: http
+authHTTPAddress: http://localhost:3000/api/stream/auth
+
+paths:
+  all:
+    # 當推流準備就緒時
+    runOnReady: 'curl -m 5 -s -X POST http://localhost:3000/api/stream/publish -H "Content-Type: application/json" -d "{\"slug\":\"$MTX_PATH\"}"'
+
+    # 當推流停止、不再就緒時
+    runOnNotReady: 'curl -m 5 -s -X POST http://localhost:3000/api/stream/unpublish -H "Content-Type: application/json" -d "{\"slug\":\"$MTX_PATH\"}"'

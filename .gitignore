@@ -1,0 +1,162 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# ===================================
+# 依賴套件 (Dependencies)
+# ===================================
+/node_modules
+# 如果使用 npm 或 pnpm
+package-lock.json
+pnpm-lock.yaml
+.pnp.*
+# ===================================
+# Yarn PnP (Plug'n'Play)
+# ===================================
+# 不要提交快取和臨時檔案
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+client/.yarn/cache
+client/.yarn/unplugged
+client/.yarn/build-state.yml
+client/.yarn/install-state.gz
+
+# 要提交的 Yarn 檔案 (不要忽略):
+# ✅ .yarn/releases/
+# ✅ .pnp.cjs
+# ✅ .pnp.loader.mjs
+# ✅ .yarnrc.yml
+# ✅ yarn.lock
+
+# ===================================
+# 建置輸出 (Build Output)
+# ===================================
+/dist
+/build
+/.next
+/out
+/.nuxt
+/.cache
+/.vite-cache
+/.turbo
+node_modules/
+client/node_modules/
+client/dist/
+dist/
+# ===================================
+# 測試覆蓋率 (Testing)
+# ===================================
+/coverage
+/.nyc_output
+*.lcov
+
+# ===================================
+# 環境變數 (Environment Variables)
+# ===================================
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env*.local
+
+# 保留環境變數範例檔案
+!.env.example
+!.env.production.example
+!client/.env.example
+!client/.env.production.example
+
+# ===================================
+# IDE 和編輯器 (IDE & Editors)
+# ===================================
+# VS Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+# IntelliJ IDEA / WebStorm
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+*.swp
+*.swo
+*~
+
+# ===================================
+# 作業系統檔案 (OS Files)
+# ===================================
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+.directory
+.Trash-*
+
+# ===================================
+# 日誌檔案 (Logs)
+# ===================================
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# ===================================
+# TypeScript
+# ===================================
+*.tsbuildinfo
+.tsbuildinfo
+tsconfig.tsbuildinfo
+
+# ===================================
+# 臨時檔案 (Temporary Files)
+# ===================================
+*.tmp
+*.temp
+*.bak
+*.cache
+
+# ===================================
+# 其他常見忽略項目
+# ===================================
+# Storybook
+storybook-static/
+
+# Bundle Analyzer
+bundle-report.html
+stats.json
+
+# Serverless
+.serverless/
+
+# Docker
+.dockerignore
+
+# Vercel
+.vercel
+
+# Local Netlify folder
+.netlify

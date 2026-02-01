@@ -1,0 +1,17 @@
+[build]
+builder = "DOCKERFILE"
+dockerfilePath = "mediamtx.Dockerfile"
+
+[deploy]
+startCommand = "/mediamtx"
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 5
+
+[[services]]
+name = "mediamtx-server"
+# 這是 Railway 的特殊設定，讓它知道要聽哪個 Port
+# 注意：Railway 的免費/基本方案通常只開放一個公開 HTTP Port
+# 若要開放 TCP/UDP (如 1935 RTMP)，可能需要付費方案或特定設定
+# 這裡預設將 HLS (8888) 映射到公開網址
+startCommand = "/mediamtx"
+internalPort = 8888 

@@ -1,0 +1,77 @@
+image: node:20
+
+# 快取配置以加速建置過程
+cache:
+  key:
+    files:
+      - yarn.lock
+      - client/yarn.lock
+  paths:
+    - .yarn/cache
+    - client/.yarn/cache
+
+stages:
+  - build
+
+build_project:
+  stage: build
+  script:
+    # 設定 Yarn 4 環境
+    - corepack enable
+    - yarn --version
+
+    # 安裝根目錄依賴
+    - yarn install --immutable
+
+    # 生成 Prisma Client (後端依賴)
+    - yarn prisma:generate
+
+    # 建置後端 (TSC)
+    - yarn build:server
+
+    # 建置前端 (Vite)
+    - cd client
+    - yarn install --immutable
+    - yarn build
+    - cd ..
+
+  artifacts:
+    name: "$CI_JOB_NAME-$CI_COMMIT_REF_SLUG"
+    paths:
+      - dist/
+      - client/dist/
+    expire_in: 1 week
+  only:
+    - develop
+    - main
+    - feature/lint
+
+pages:
+  stage: build
+  script:
+    # 設定 Yarn 4 環境
+    - corepack enable
+    - yarn --version
+
+    # 安裝根目錄依賴
+    - yarn install --immutable
+
+    # 生成 Prisma Client (後端依賴)
+    - yarn prisma:generate
+
+    # 建置前端 (Vite)
+    - cd client
+    - yarn install --immutable
+    - export VITE_BASE_PATH=/plugins-based-framework/
+    - yarn build
+    - cd ..
+    
+    # 複製前端建置輸出到 public 目錄供 GitLab Pages 使用
+    - cp -r client/dist public
+    # SPA 路由支援: 複製 index.html 為 404.html 以解決重整 404 問題
+    - cp client/dist/index.html public/404.html
+  artifacts:
+    paths:
+      - public
+  rules:
+    - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH

@@ -1,0 +1,115 @@
+key,zh-TW,en-US,ko-KR
+dashboard,儀表板,Dashboard,대시보드
+usersettings,使用者設定,User Settings,사용자 설정
+chatroom,聊天室,Chat Room,채팅방
+settings,設定,Settings,설정
+gethelp,幫助,Get Help,도움말
+theme,主題,Theme,테마
+language,語系,Language,언어
+zh-tw,中文,Chinese,중국어
+en-us,英文,English,영어
+onlinepeople,上線人數,Online People,온라인 사용자
+interactive,互動人數,Interactive,인터랙티브
+light,淺色,Light,라이트
+dark,深色,Dark,다크
+login,登入,Login,로그인
+edit personal profile,編輯個人資料,Edit Personal Profile,개인 정보 편집
+logout,登出,Logout,로그아웃
+code_1001,請輸入完整資訊,Code1001,코드1001
+register,註冊,Register,등록
+account,帳號,Account,계정
+password,密碼,Password,비밀번호
+name,暱稱,Name,이름
+email,信箱,Email,이메일
+id,ID,Id,아이디
+state,狀態,State,상태
+avatarurl,圖片,Avatar Url,아바타 URL
+role,角色,Role,역할
+created at,創建於,Created At,생성일
+verified,已驗證,Verified,인증됨
+online,在線,Online,온라인
+offline,離線,Offline,오프라인
+store,儲存,Store,저장
+live streaming,正在直播,Live Streaming,라이브 스트리밍
+live,直播,Live,라이브
+people online,人在線,People Online,온라인 사용자
+no rooms live streaming,目前沒有直播中的房間,No Rooms Live Streaming,현재 라이브 스트리밍 중인 방이 없습니다.
+message notifications,訊息通知,Message Notifications,메시지 알림
+no notifications yet,目前沒有通知,No Notifications Yet,아직 알림이 없습니다.
+message sent,發送了訊息,Message Sent,메시지를 보냈습니다.
+in,在,In,에
+login from device,登入來自裝置,Login From Device,기기에서 로그인
+platform instant messages,平台即時消息,Platform Instant Messages,플랫폼 인스턴트 메시지
+no messages at the moment,目前沒有訊息,No Messages At The Moment,현재 메시지가 없습니다.
+degraded,延遲,Degraded,지연
+system status,系統狀態,System Status,시스템 상태
+api latency,API 延遲,Api Latency,API 지연
+good,良好,Good,좋음
+slow,緩慢,Slow,느림
+offline,離線,Offline,오프라인
+continuously listening,持續監聽,Continuously Listening,지속적으로 수신 중
+memory remaining,記憶體剩餘,Memory Remaining,남은 메모리
+day,白天,Day,낮
+onlinepeople,線上用戶,Online People,온라인 사용자
+interactive,互動,Interactive,인터랙티브
+options,選項,Options,옵션
+user profile,用戶資料,User Profile,사용자 프로필
+adjust user details and permissions,調整用戶詳細資料跟權限,Adjust User Details And Permissions,사용자 세부 정보 및 권한 조정
+rooms,房間,Rooms,방
+all chat rooms,所有聊天室,All Chat Rooms,모든 채팅방
+live chat rooms,直播中聊天室,Live Chat Rooms,라이브 채팅방
+off chat rooms,離線聊天室,Chat Rooms,오프 채팅방
+cancel,取消,Cancel,취소
+delete user,刪除用戶,Delete User,사용자 삭제
+are you sure you want to delete the user,確定要刪除用戶嗎？,Are You Sure You Want To Delete The User,사용자를 삭제하시겠습니까?
+confirm,確定,Confirm,확인
+this chat room is not live.,此聊天室未直播,This Chat Room Is Not Live,이 채팅방은 라이브가 아닙니다.
+the chat room is currently live.,正在直播的聊天室,The Chat Room Is Currently Live,채팅방이 현재 라이브입니다.
+number of people in the room,房間人數,Number Of People In The Room,방에 있는 사람 수
+not set,未設定,Not Set,설정되지 않음
+retrieval timed out (stream may not be ready),擷取逾時 (串流可能未就緒),Retrieval Timed Out Stream May Not Be Ready,검색 시간 초과(스트림 준비가 안 되었을 수 있습니다)
+capturing,擷取中...,Capturing,캡처 중
+unable to obtain screenshot,無法取得截圖,Unable To Obtain Screenshot,스크린샷을 얻을 수 없습니다
+live snapshot,即時快照,Live Snapshot,라이브 스냅샷
+waiting for the live stream to start,等待直播開始...,Waiting For The Live Stream To Start,라이브 스트림 시작을 기다리는 중
+ending the live stream,結束直播,Ending The Live Stream,라이브 스트림 종료 중
+starting the live stream,開始直播,Starting The Live Stream,라이브 스트림 시작 중
+add a chat room.,新增聊天室,Add A Chat Room,채팅방을 추가하세요.
+please enter the relevant information for the chat room,請輸入聊天室的相關資訊。,Please Enter The Relevant Information For The Chat Room,채팅방에 대한 관련 정보를 입력하세요.
+description,描述,Description,설명
+slug,房號,Slug,슬러그
+system,系統,System,시스템
+live chat room,實況聊天室,Live Chat Room,라이브 채팅방
+send message,傳送訊息,Send Message,메시지 전송
+request error,請求錯誤,Request Error,요청 오류
+insufficient permissions,權限不足,Insufficient Permissions,권한 부족
+resource not found,找不到資源,Resource Not Found,리소스를 찾을 수 없습니다
+server error,伺服器錯誤,Server Error,서버 오류
+other errors,其他錯誤,Other Errors,기타 오류
+entered the chat room,進入了聊天室,Entered The Chat Room,채팅방에 입장했습니다
+left the chat room,離開了聊天室,Left The Chat Room,채팅방을 나갔습니다
+REGISTER_SUCCESS,註冊成功,REGISTER_SUCCESS,등록 성공
+SERVER_INTERNAL_ERROR,伺服器內部錯誤,SERVER_INTERNAL_ERROR,서버 내부 오류
+LOGIN_SUCCESS,登入成功,LOGIN_SUCCESS,로그인 성공
+LOGOUT_SUCCESS,註銷成功,LOGOUT_SUCCESS,로그아웃 성공
+UPDATE_USER_SUCCESS,更新用戶成功,UPDATE_USER_SUCCESS,사용자 업데이트 성공
+DELETE_USER_SUCCESS,刪除用戶成功,DELETE_USER_SUCCESS,사용자 삭제 성공
+ADD_USER_SUCCESS,新增用戶成功,ADD_USER_SUCCESS,사용자 추가 성공
+UPDATE_USER_STATE_SUCCESS,更新使用者狀態成功,UPDATE_USER_STATE_SUCCESS,사용자 상태 업데이트 성공
+UPDATE_USER_PROFILE_SUCCESS,更新使用者設定檔成功,UPDATE_USER_PROFILE_SUCCESS,사용자 프로필 업데이트 성공
+SYSTEM_INFO_SUCCESS,系統資訊成功,SYSTEM_INFO_SUCCESS,시스템 정보 성공
+ADD_ROOM_SUCCESS,新增房間成功,ADD_ROOM_SUCCESS,방 추가 성공
+GET_ROOM_BY_SLUG_SUCCESS,依別名取得房間成功,GET_ROOM_BY_SLUG_SUCCESS,슬러그로 방 가져오기 성공
+DELETE_ROOM_SUCCESS,刪除房間成功,DELETE_ROOM_SUCCESS,방 삭제 성공
+yes,是,Yes,예
+no,否,No,아니요
+admin,管理員,Admin,관리자
+user,使用者,User,사용자
+selectstate,選擇狀態,Select State,상태 선택
+UNAUTHORIZED,未提供認證憑證,UNAUTHORIZED,인증 자격 증명 미제공
+INVALID_TOKEN,無效或過期,INVALID_TOKEN,유효하지 않거나 만료됨
+ACCOUNT_NOT_FOUND,帳號不存在,ACCOUNT_NOT_FOUND,계정을 찾을 수 없습니다
+ACCOUNT_LOOGED_IN_ELSEWHERE,帳號已在其他地方登入,ACCOUNT_LOOGED_IN_ELSEWHERE,계정이 다른 곳에서 로그인되었습니다
+SERVER_INTERNAL_ERROR,伺服器內部錯誤,SERVER_INTERNAL_ERROR,서버 내부 오류
+ko-kr,韓語,Korean,한국어
+selectrole,選擇角色,Select Role,역할 선택

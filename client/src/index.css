@@ -1,0 +1,179 @@
+/* Tailwind CSS 指令 - 引入 Tailwind 生成的樣式 */
+@tailwind base; /* 基礎樣式：重置、預設元素樣式 */
+@tailwind components; /* 組件樣式：可自定義的組件類 */
+@tailwind utilities; /* 工具類：bg-red-500、flex 等 */
+
+/* 
+ * shadcn/ui 主題系統 - 亮色模式
+ * 使用 HSL 格式：色相(Hue) 飽和度(Saturation) 亮度(Lightness)
+ * 在 tailwind.config.js 中通過 hsl(var(--primary)) 使用
+ */
+@layer base {
+  :root {
+    /* 基礎顏色 */
+    --background: 0 0% 100%; /* 頁面背景色：白色 */
+    --foreground: 0 0% 3.9%; /* 主要文字顏色：深黑 (Zinc 950) */
+
+    /* 卡片顏色 */
+    --card: 0 0% 100%; /* 卡片背景：白色 */
+    --card-foreground: 0 0% 3.9%; /* 卡片文字：深黑 */
+
+    /* 彈出框顏色（Tooltip、Dropdown 等） */
+    --popover: 0 0% 100%; /* 彈出框背景：白色 */
+    --popover-foreground: 0 0% 3.9%; /* 彈出框文字：深黑 */
+
+    /* 主要顏色（按鈕、連結等） */
+    --primary: 0 0% 9%; /* 主色：純黑 (Zinc 900) */
+    --primary-foreground: 0 0% 98%; /* 主色上的文字：白色 */
+
+    /* 次要顏色 */
+    --secondary: 0 0% 96.1%; /* 次要色：淺灰 (Zinc 100) */
+    --secondary-foreground: 0 0% 9%; /* 次要色上的文字：深黑 */
+
+    /* 柔和/靜音顏色（次要文字、禁用狀態等） */
+    --muted: 0 0% 96.1%; /* 柔和背景：淺灰 */
+    --muted-foreground: 0 0% 45.1%; /* 柔和文字：中灰 (Zinc 500) */
+
+    /* 強調色（Hover 狀態等） */
+    --accent: 0 0% 96.1%; /* 強調背景：淺灰 */
+    --accent-foreground: 0 0% 9%; /* 強調文字：深黑 */
+
+    /* 破壞性操作顏色（刪除、警告等） */
+    --destructive: 0 84.2% 60.2%; /* 破壞性背景：紅色 */
+    --destructive-foreground: 0 0% 98%; /* 破壞性文字：白色 */
+
+    /* 邊框和輸入框 */
+    --border: 0 0% 89.8%; /* 邊框顏色：淺灰 (Zinc 200) */
+    --input: 0 0% 89.8%; /* 輸入框邊框：淺灰 */
+
+    /* 焦點環 */
+    --ring: 0 0% 3.9%; /* 焦點環顏色：深黑 */
+
+    /* 圓角大小 */
+    --radius: 0.5rem; /* 預設圓角：8px */
+
+    /* Sidebar 顏色 - 亮色模式 */
+    --sidebar-background: 0 0% 98%; /* 淺灰背景 */
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+    --spacing: 0.25rem;
+    --chart-1: oklch(0.646 0.222 41.116);
+    --chart-2: oklch(0.6 0.118 184.704);
+    --chart-3: oklch(0.398 0.07 227.392);
+    --chart-4: oklch(0.828 0.189 84.429);
+    --chart-5: oklch(0.769 0.188 70.08);
+  }
+
+  /* 
+   * 深色模式主題
+   * 使用方式：<html class="dark"> 或 <body class="dark">
+   * 所有使用 CSS 變數的元素會自動切換到深色主題
+   */
+  .dark {
+    /* 基礎顏色（與亮色模式相反） */
+    --background: 0 0% 3.9%; /* 頁面背景：純黑/深灰 */
+    --foreground: 0 0% 98%; /* 主要文字：白色 */
+
+    /* 卡片顏色 */
+    --card: 0 0% 3.9%; /* 卡片背景：深色 */
+    --card-foreground: 0 0% 98%; /* 卡片文字：淺色 */
+
+    /* 彈出框顏色 */
+    --popover: 0 0% 3.9%; /* 彈出框背景：深色 */
+    --popover-foreground: 0 0% 98%; /* 彈出框文字：淺色 */
+
+    /* 主要顏色（深色模式下變淺） */
+    --primary: 0 0% 98%; /* 主色：淺色 */
+    --primary-foreground: 0 0% 9%; /* 主色上的文字：深色 */
+
+    /* 次要顏色 */
+    --secondary: 0 0% 30%; /* 次要色：深灰 */
+    --secondary-foreground: 0 0% 98%; /* 次要色上的文字：淺色 */
+
+    /* 柔和/靜音顏色 */
+    --muted: 0 0% 30%; /* 柔和背景：深灰 */
+    --muted-foreground: 0 0% 63.9%; /* 柔和文字：中灰 */
+
+    /* 強調色 */
+    --accent: 0 0% 30%; /* 強調背景：深灰 */
+    --accent-foreground: 0 0% 98%; /* 強調文字：淺色 */
+
+    /* 破壞性操作顏色 */
+    --destructive: 0 62.8% 30.6%; /* 破壞性背景：深紅 */
+    --destructive-foreground: 0 0% 98%; /* 破壞性文字：淺色 */
+
+    /* 邊框和輸入框 */
+    --border: 0 0% 30%; /* 邊框顏色：深灰 */
+    --input: 0 0% 30%; /* 輸入框邊框：深灰 */
+
+    /* 焦點環 */
+    --ring: 0 0% 83.1%; /* 焦點環顏色：淺灰 */
+
+    /* Sidebar 顏色 */
+    /* Sidebar 顏色 - 深灰色系 */
+    --sidebar-background: 0 0% 12%; /* 深灰色背景 */
+    --sidebar-foreground: 0 0% 98%; /* 淺色文字 */
+    --sidebar-primary: 0 0% 98%; /* 主色 */
+    --sidebar-primary-foreground: 0 0% 9%; /* 主色文字 */
+    --sidebar-accent: 0 0% 18%; /* 強調色背景 */
+    --sidebar-accent-foreground: 0 0% 98%; /* 強調色文字 */
+    --sidebar-border: 0 0% 18%; /* 邊框顏色 */
+    --sidebar-ring: 0 0% 80%; /* 焦點環 */
+
+    --spacing: 0.25rem;
+    --chart-1: oklch(0.488 0.243 264.376);
+    --chart-2: oklch(0.696 0.17 162.48);
+    --chart-3: oklch(0.769 0.188 70.08);
+    --chart-4: oklch(0.627 0.265 303.9);
+    --chart-5: oklch(0.645 0.246 16.439);
+  }
+}
+
+/* 
+ * 全局基礎樣式
+ * @layer base 確保這些樣式可以被 Tailwind 工具類覆蓋
+ */
+@layer base {
+  /* 所有元素的基礎樣式 */
+  * {
+    @apply border-border; /* 使用統一的邊框顏色（來自 CSS 變數） */
+    margin: 0; /* 重置外邊距 */
+    padding: 0; /* 重置內邊距 */
+    box-sizing: border-box; /* 使用 border-box 盒模型 */
+    /* border: 1px solid red; */
+  }
+
+  /* body 元素的基礎樣式 */
+  body {
+    @apply bg-background text-foreground; /* 使用主題顏色 */
+
+    /* 系統字體堆疊（優先使用系統原生字體） */
+    font-family:
+      -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell',
+      'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+
+    /* 字體平滑渲染（提升文字顯示質量） */
+    -webkit-font-smoothing: antialiased; /* macOS/iOS */
+    -moz-osx-font-smoothing: grayscale; /* Firefox on macOS */
+  }
+}
+
+/* 
+ * 自定義樣式 - 覆蓋上面的 @apply bg-background
+ * 這裡的樣式優先級更高，會覆蓋 @layer base 中的樣式
+ */
+body {
+  /* 漸變背景（紫色到藍色） */
+  /* background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); */
+  min-height: 100vh; /* 最小高度為視窗高度 */
+}
+
+/* React 根元素的佈局 */
+#root {
+  min-height: 100vh; /* 最小高度為視窗高度 */
+}

@@ -1,0 +1,36 @@
+# Render.com 部署配置
+# 文件說明: https://render.com/docs/blueprint-spec
+
+services:
+  # 後端 Web Service
+  - type: web
+    name: plugins-based-framework-backend
+    env: node
+    region: singapore
+    plan: free
+    buildCommand: yarn install --immutable && yarn prisma:generate && yarn build:server
+    startCommand: yarn prisma:migrate:deploy && yarn start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3001
+      - key: DATABASE_URL
+        fromDatabase:
+          name: plugins-based-framework-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: CORS_ORIGIN
+        value: https://louisex222.gitlab.io
+    healthCheckPath: /health
+
+
+
+databases:
+  # PostgreSQL 資料庫
+  - name: plugins-based-framework-db
+    databaseName: plugins_db
+    user: plugins_user
+    plan: free
+    region: singapore
