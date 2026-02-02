@@ -8,9 +8,9 @@ readTimeout: 10s
 writeTimeout: 10s
 
 # RTMP 設定 (OBS 推流用)
-rtmp: yes
+rtmp: no
 rtmpAddress: :1935
-rtmpEncryption: yes
+rtmpEncryption: no
 
 # HLS 設定 (網頁播放用)
 hls: yes
@@ -21,15 +21,12 @@ hlsVariant: lowLatency
 # WebRTC 設定 (低延遲播放用)
 webrtc: yes
 webrtcAddress: :8889
-webrtcAllowOrigins:
-  - "*"
-# 修正 NAT/Railway 連線問題
+webrtcAllowOrigins: ["*"]
 webrtcICEUDP: yes
 webrtcLocalUDPAddress: :8189
 webrtcLocalTCPAddress: :8889
 webrtcICEServers2:
   - url: stun:stun.l.google.com:19302
-webrtcNote: "Railway 上需將 PORT 環境變數設為 8889 才能公開此服務"
 
 # 權限控制 (身份驗證)
 authMethod: http
