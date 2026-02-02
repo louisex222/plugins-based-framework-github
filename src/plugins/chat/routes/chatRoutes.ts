@@ -16,9 +16,13 @@ router.post("/stream/auth", async (req: Request, res: Response) => {
       return res.status(200).end();
     }
     
-    console.warn(`[StreamAuth] Rejected: slug=${roomSlug}, provided=${providedKey}, expected=${expectedKey}`);
+    // 認證失敗日誌
+    const logMsg = `[StreamAuth] Rejected: slug=${roomSlug}, provided=${providedKey || 'none'}, expected=${expectedKey || 'none'}`;
+    console.warn(logMsg);
+
     return res.status(401).json({ 
-      error: "Invalid stream key", 
+      error: "Invalid stream key",
+      message: "Please provide a valid stream key via '?key=...' query parameter, Basic Auth, or path suffix (e.g., room/key).",
       debug: { roomSlug, providedKey, room: room ? { id: room.id, slug: room.slug } : null } 
     });
 

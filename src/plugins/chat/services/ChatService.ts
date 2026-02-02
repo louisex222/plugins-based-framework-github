@@ -18,12 +18,14 @@ export class ChatService {
     
     if (action !== "publish") return { authorized: true }; 
 
-    // 路徑解析
-    const roomSlug = path
+    // 路徑解析：支援 room 或 room/key
+    const pathParts = path
       .replace(/\/(whip|whep|hls|rtmp)$/i, '')
       .split('/')
-      .filter(Boolean)
-      .pop();
+      .filter(Boolean);
+
+    const roomSlug = pathParts[0];
+    let pathKey = pathParts.length > 1 ? pathParts[1] : undefined;
 
     if (!roomSlug) {
       console.error(`[ChatService] 無法解析房間 Slug: ${path}`);
@@ -31,10 +33,9 @@ export class ChatService {
     }
 
     const params = new URLSearchParams(query);
-    // 優先序：URL 參數 key > HTTP Basic Auth Password > HTTP Basic Auth Username
-    const providedKey = params.get('key') || password || user || undefined;
+    // 優先序：URL 參數 key > HTTP Basic Auth Password > HTTP Basic Auth Username > Path Key
+    const providedKey = params.get('key') || password || user || pathKey;
 
-    
     const room = await prisma.chatRoom.findUnique({
       where: { slug: roomSlug }
     });
@@ -43,7 +44,6 @@ export class ChatService {
     if (!room) {
       console.log(`[ChatService] 允許新房間推流: ${roomSlug}`);
       return { authorized: true, roomSlug, room: null };
-
     }
 
     // 2. 如果房間存在，但沒有設定金鑰，也允許推流
@@ -55,7 +55,7 @@ export class ChatService {
     // 3. 檢查金鑰是否符合
     const isAuthorized = room.streamKey === providedKey;
     if (!isAuthorized) {
-      console.warn(`[ChatService] 房間 ${roomSlug} 認證失敗: 預期 ${room.streamKey}, 收到 ${providedKey}`);
+      console.warn(`[ChatService] 房間 ${roomSlug} 認證失敗: 預期 ${room.streamKey}, 收到 ${providedKey || 'undefined'}`);
     } else {
       console.log(`[ChatService] 房間 ${roomSlug} 認證成功`);
     }
