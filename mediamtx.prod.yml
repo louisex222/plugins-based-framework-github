@@ -1,44 +1,20 @@
-# MediaMTX 生產環境配置
-# 詳細文件: https://github.com/bluenviron/mediamtx
-
-# 全域設定
-logLevel: info
-logDestinations: [stdout]
-readTimeout: 10s
-writeTimeout: 10s
-
-# RTMP 設定 (OBS 推流用)
-rtmp: no
-rtmpAddress: :1935
-rtmpEncryption: no
-
-# HLS 設定 (網頁播放用)
-hls: yes
-hlsAddress: :8888
-hlsAlwaysRemux: no
-hlsVariant: lowLatency
-
-# WebRTC 設定 (低延遲播放用)
 webrtc: yes
-webrtcAddress: :8889
 webrtcAllowOrigins: ["*"]
-webrtcICEUDP: yes
+webrtcAddress: :8889
 webrtcLocalUDPAddress: :8189
-webrtcLocalTCPAddress: :8889
-webrtcICEServers2:
-  - url: stun:stun.l.google.com:19302
+
 # 告訴 MediaMTX 它的對外公網域名，這非常重要！
 webrtcAdditionalHosts: [mediamtx-production-a446.up.railway.app]
 
 # 權限控制 (身份驗證)
 authMethod: http
 # 注意: $BACKEND_API_URL 將在啟動時由 Docker 替換為實際的後端網址
-authHTTPAddress: $BACKEND_API_URL/api/stream/auth
+authHTTPAddress: https://plugins-based-framework-backend-lzav.onrender.com/api/stream/auth
 
 paths:
   all_others:
     # 當推流準備就緒時 (通知後端直播開始)
-    runOnReady: 'curl -m 5 -s -X POST $BACKEND_API_URL/api/stream/publish -H "Content-Type: application/json" -d "{\"slug\":\"$MTX_PATH\"}"'
+    runOnReady: 'curl -m 5 -s -X POST https://plugins-based-framework-backend-lzav.onrender.com/api/stream/publish -H "Content-Type: application/json" -d "{\"slug\":\"$MTX_PATH\"}"'
 
     # 當推流停止時 (通知後端直播結束)
-    runOnNotReady: 'curl -m 5 -s -X POST $BACKEND_API_URL/api/stream/unpublish -H "Content-Type: application/json" -d "{\"slug\":\"$MTX_PATH\"}"'
+    runOnNotReady: 'curl -m 5 -s -X POST https://plugins-based-framework-backend-lzav.onrender.com/api/stream/unpublish -H "Content-Type: application/json" -d "{\"slug\":\"$MTX_PATH\"}"'
