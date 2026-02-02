@@ -7,19 +7,22 @@ export class ChatService {
    * @returns 回傳布林值代表驗證是否成功
    */
   async streamAuth(path: string, action: string, query: string): Promise<boolean> {
+    console.log(`[ChatService] Auth Request - Path: ${path}, Action: ${action}, Query: ${query}`);
+    
     if (action !== "publish") return true; 
 
-    // 修正：從路徑中提取真正的房間名稱，並移除 /whip 或 /whep 尾綴
+    // 極度魯棒的路徑解析：移除協定標記並提取最後一段有效字元作為 slug
     const roomSlug = path
-      .replace(/\/(whip|whep)$/, '')
+      .replace(/\/(whip|whep|hls|rtmp)$/i, '') // 移除常見尾綴
       .split('/')
       .filter(Boolean)
       .pop();
 
-    if (!roomSlug) return false;
+    if (!roomSlug) {
+      console.error(`[ChatService] 無法解析房間 Slug: ${path}`);
+      return false;
+    }
 
-
-    // MediaMTX 的 query 格式通常是 "key=value&..." 的字串
     const params = new URLSearchParams(query);
     const providedKey = params.get('key');
     
@@ -27,20 +30,29 @@ export class ChatService {
       where: { slug: roomSlug }
     });
 
-    // 如果房間不存在，則允許推流 (handlePublish 會自動建立它)
-    // 如果房間存在，則必須驗證 streamKey
+    // 1. 如果房間不存在，允許推流 (handlePublish 會建立它)
     if (!room) {
-      console.log(`[ChatService] 偵測到新房間推流請求: ${roomSlug}, 允許通過以進行自動建立`);
+      console.log(`[ChatService] 允許新房間推流: ${roomSlug}`);
       return true;
     }
 
-    const isAuthorized = !room.streamKey || room.streamKey === providedKey;
+    // 2. 如果房間存在，但沒有設定金鑰，也允許推流
+    if (!room.streamKey) {
+      console.log(`[ChatService] 房間 ${roomSlug} 未設金鑰，允許推流`);
+      return true;
+    }
+
+    // 3. 檢查金鑰是否符合
+    const isAuthorized = room.streamKey === providedKey;
     if (!isAuthorized) {
-      console.warn(`[ChatService] 房間 ${roomSlug} 認證失敗: 金鑰不符`);
+      console.warn(`[ChatService] 房間 ${roomSlug} 認證失敗: 預期 ${room.streamKey}, 收到 ${providedKey}`);
+    } else {
+      console.log(`[ChatService] 房間 ${roomSlug} 認證成功`);
     }
 
     return isAuthorized;
   }
+
 
 
   /**
