@@ -6,25 +6,25 @@ export class ChatService {
    * 驗證串流密鑰
    * @returns 回傳布林值代表驗證是否成功
    */
-  async streamAuth(path: string, action: string, query: string): Promise<boolean> {
+  async streamAuth(path: string, action: string, query: string): Promise<{ authorized: boolean; roomSlug?: string; providedKey?: string; expectedKey?: string }> {
     console.log(`[ChatService] Auth Request - Path: ${path}, Action: ${action}, Query: ${query}`);
     
-    if (action !== "publish") return true; 
+    if (action !== "publish") return { authorized: true }; 
 
-    // 極度魯棒的路徑解析：移除協定標記並提取最後一段有效字元作為 slug
+    // 路徑解析
     const roomSlug = path
-      .replace(/\/(whip|whep|hls|rtmp)$/i, '') // 移除常見尾綴
+      .replace(/\/(whip|whep|hls|rtmp)$/i, '')
       .split('/')
       .filter(Boolean)
       .pop();
 
     if (!roomSlug) {
       console.error(`[ChatService] 無法解析房間 Slug: ${path}`);
-      return false;
+      return { authorized: false, roomSlug: '' };
     }
 
     const params = new URLSearchParams(query);
-    const providedKey = params.get('key');
+    const providedKey = params.get('key') || undefined;
     
     const room = await prisma.chatRoom.findUnique({
       where: { slug: roomSlug }
@@ -33,13 +33,13 @@ export class ChatService {
     // 1. 如果房間不存在，允許推流 (handlePublish 會建立它)
     if (!room) {
       console.log(`[ChatService] 允許新房間推流: ${roomSlug}`);
-      return true;
+      return { authorized: true, roomSlug };
     }
 
     // 2. 如果房間存在，但沒有設定金鑰，也允許推流
     if (!room.streamKey) {
       console.log(`[ChatService] 房間 ${roomSlug} 未設金鑰，允許推流`);
-      return true;
+      return { authorized: true, roomSlug };
     }
 
     // 3. 檢查金鑰是否符合
@@ -50,8 +50,14 @@ export class ChatService {
       console.log(`[ChatService] 房間 ${roomSlug} 認證成功`);
     }
 
-    return isAuthorized;
+    return { 
+      authorized: isAuthorized, 
+      roomSlug, 
+      providedKey, 
+      expectedKey: room.streamKey || undefined 
+    };
   }
+
 
 
 

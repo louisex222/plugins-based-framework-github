@@ -8,13 +8,18 @@ const chatService = new ChatService();
 router.post("/stream/auth", async (req: Request, res: Response) => {
   try {
     const { path, action, query } = req.body;
-    const authorized = await chatService.streamAuth(path, action, query);
+    const { authorized, roomSlug, providedKey, expectedKey } = await chatService.streamAuth(path, action, query);
     
     if (authorized) {
       return res.status(200).end();
     }
     
-    return res.status(401).json({ error: "Invalid stream key" });
+    console.warn(`[StreamAuth] Rejected: slug=${roomSlug}, provided=${providedKey}, expected=${expectedKey}`);
+    return res.status(401).json({ 
+      error: "Invalid stream key", 
+      debug: { roomSlug, providedKey } 
+    });
+
   } catch (error) {
     console.error('[roomRoutes] auth error:', error);
     return res.status(500).end();
