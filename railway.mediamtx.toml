@@ -14,4 +14,4 @@ name = "mediamtx-server"
 # 若要開放 TCP/UDP (如 1935 RTMP)，可能需要付費方案或特定設定
 # 這裡預設將 HLS (8888) 映射到公開網址
 startCommand = "/mediamtx"
-internalPort = 1935
+internalPort = 8889

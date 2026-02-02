@@ -23,15 +23,21 @@ webrtc: yes
 webrtcAddress: :8889
 webrtcAllowOrigins:
   - "*"
-webrtcNote: "Railway 上需將 PORT 環境變數設為 8889 才能公開此服務，這會導致 HLS (8888) 無法透過同一網域訪問"
+# 修正 NAT/Railway 連線問題
+webrtcICEUDP: yes
+webrtcLocalUDPAddress: :8189
+webrtcLocalTCPAddress: :8889
+webrtcICEServers2:
+  - url: stun:stun.l.google.com:19302
+webrtcNote: "Railway 上需將 PORT 環境變數設為 8889 才能公開此服務"
 
 # 權限控制 (身份驗證)
-authMethod: https
+authMethod: http
 # 注意: $BACKEND_API_URL 將在啟動時由 Docker 替換為實際的後端網址
-authHTTPSAddress: $BACKEND_API_URL/api/stream/auth
+authHTTPAddress: $BACKEND_API_URL/api/stream/auth
 
 paths:
-  all:
+  all_others:
     # 當推流準備就緒時 (通知後端直播開始)
     runOnReady: 'curl -m 5 -s -X POST $BACKEND_API_URL/api/stream/publish -H "Content-Type: application/json" -d "{\"slug\":\"$MTX_PATH\"}"'
 
