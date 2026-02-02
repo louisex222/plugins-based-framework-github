@@ -26,9 +26,9 @@ webrtcAllowOrigins:
 webrtcNote: "Railway 上需將 PORT 環境變數設為 8889 才能公開此服務，這會導致 HLS (8888) 無法透過同一網域訪問"
 
 # 權限控制 (身份驗證)
-authMethod: http
+authMethod: https
 # 注意: $BACKEND_API_URL 將在啟動時由 Docker 替換為實際的後端網址
-authHTTPAddress: $BACKEND_API_URL/api/stream/auth
+authHTTPSAddress: $BACKEND_API_URL/api/stream/auth
 
 paths:
   all:
