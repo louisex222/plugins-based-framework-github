@@ -22,7 +22,7 @@ webrtcAdditionalHosts: [mediamtx-louise-2026.fly.dev]
 # 權限控制 (身份驗證)
 authMethod: http
 # 注意: $BACKEND_API_URL 將在啟動時由 Docker 替換為實際的後端網址
-authHTTPAddress: $BACKEND_API_URL/api/stream/auth
+
 
 paths:
   all_others:
