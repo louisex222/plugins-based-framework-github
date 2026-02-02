@@ -9,10 +9,10 @@ srt: no
 
 # WebRTC 設定
 webrtc: yes
-webrtcAddress: :8889
+# 修正：明確綁定到 0.0.0.0 確保 Fly.io Proxy 可以導向流量
+webrtcAddress: 0.0.0.0:8889
 webrtcAllowOrigins: ["*"]
-webrtcLocalUDPAddress: :8189
-# 最新版本中不需要 webrtcICEUDP，且欄位名稱已變更或移除
+webrtcLocalUDPAddress: 0.0.0.0:8189
 webrtcICEServers2:
   - url: stun:stun.l.google.com:19302
 
