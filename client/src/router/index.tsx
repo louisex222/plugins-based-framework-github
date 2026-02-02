@@ -1,4 +1,4 @@
-import { createBrowserRouter } from 'react-router'
+import { createHashRouter } from 'react-router'
 import { MainPage } from '@/page/mainPage'
 import { LoginPage } from '@/page/loginPage'
 import GlobalRouterSetting from '@/utils/routerFlag'
@@ -15,25 +15,18 @@ const routerList = globalRouterSetting.fcGetFilterRouter().map(name => ({
   },
 }))
 
-const basename = import.meta.env.BASE_URL
-const router = createBrowserRouter(
-  [
-    {
-      path: '/',
-      Component: MainPage,
-      HydrateFallback: () => <div>Loading...</div>,
-      children: [...routerList],
-    },
-    {
-      path: '/login',
-      Component: LoginPage,
-      HydrateFallback: () => <div>Loading...</div>,
-    },
-  ],
+const router = createHashRouter([
   {
-    // 移除尾部斜線，除非它是根路徑 '/'
-    basename: basename?.endsWith('/') && basename !== '/' ? basename.slice(0, -1) : basename,
+    path: '/',
+    Component: MainPage,
+    HydrateFallback: () => <div>Loading...</div>,
+    children: [...routerList],
   },
-)
+  {
+    path: '/login',
+    Component: LoginPage,
+    HydrateFallback: () => <div>Loading...</div>,
+  },
+])
 
 export default router
