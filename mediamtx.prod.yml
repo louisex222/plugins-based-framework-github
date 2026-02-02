@@ -37,7 +37,7 @@ webrtcAdditionalHosts:
 # Authentication (HTTP → Backend)
 ############################################
 authMethod: http
-authHTTPAddress: $BACKEND_API_URL/api/stream/auth?slug=$path&provided=$password
+authHTTPAddress: $BACKEND_API_URL/api/stream/auth?path=$path&password=$password&action=$action
 
 ############################################
 # Paths
