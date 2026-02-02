@@ -8,6 +8,8 @@ logDestinations: [stdout]
 # Enabled protocols
 ############################################
 rtmp: yes
+
+rtmpAddress: :1935
 hls: no
 srt: no
 
@@ -35,7 +37,7 @@ webrtcAdditionalHosts:
 # Authentication (HTTP → Backend)
 ############################################
 authMethod: http
-authHTTPAddress: $BACKEND_API_URL/api/stream/auth
+authHTTPAddress: $BACKEND_API_URL/api/stream/auth?slug=$path&key=$password
 
 ############################################
 # Paths
