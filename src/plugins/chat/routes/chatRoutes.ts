@@ -8,8 +8,9 @@ const chatService = new ChatService();
 // MediaMTX 身份驗證 Webhook
 router.post("/stream/auth", async (req: Request, res: Response) => {
   try {
-    const { path, action, query } = req.body;
-    const { authorized, roomSlug, providedKey, expectedKey, room } = await chatService.streamAuth(path, action, query);
+    const { path, action, query, user, password } = req.body;
+    const { authorized, roomSlug, providedKey, expectedKey, room } = await chatService.streamAuth(path, action, query, user, password);
+
     
     if (authorized) {
       return res.status(200).end();

@@ -6,8 +6,15 @@ export class ChatService {
    * 驗證串流密鑰
    * @returns 回傳布林值代表驗證是否成功
    */
-  async streamAuth(path: string, action: string, query: string): Promise<{ authorized: boolean; roomSlug?: string; providedKey?: string; expectedKey?: string; room?: ChatRoom | null }> {
-    console.log(`[ChatService] Auth Request - Path: ${path}, Action: ${action}, Query: ${query}`);
+  async streamAuth(
+    path: string, 
+    action: string, 
+    query: string, 
+    user?: string, 
+    password?: string
+  ): Promise<{ authorized: boolean; roomSlug?: string; providedKey?: string; expectedKey?: string; room?: ChatRoom | null }> {
+    console.log(`[ChatService] Auth Request - Path: ${path}, Action: ${action}, Query: ${query}, User: ${user}, Pwd: ${password}`);
+
     
     if (action !== "publish") return { authorized: true }; 
 
@@ -24,7 +31,9 @@ export class ChatService {
     }
 
     const params = new URLSearchParams(query);
-    const providedKey = params.get('key') || undefined;
+    // 優先序：URL 參數 key > HTTP Basic Auth Password > HTTP Basic Auth Username
+    const providedKey = params.get('key') || password || user || undefined;
+
     
     const room = await prisma.chatRoom.findUnique({
       where: { slug: roomSlug }
@@ -41,7 +50,6 @@ export class ChatService {
     if (!room.streamKey) {
       console.log(`[ChatService] 房間 ${roomSlug} 未設金鑰，允許推流`);
       return { authorized: true, roomSlug, room };
-
     }
 
     // 3. 檢查金鑰是否符合
