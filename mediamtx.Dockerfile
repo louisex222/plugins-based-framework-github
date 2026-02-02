@@ -15,10 +15,6 @@ RUN echo '#!/bin/sh' > /entrypoint.sh && \
     echo 'exec /mediamtx /mediamtx.yml' >> /entrypoint.sh && \
     chmod +x /entrypoint.sh
 
-# Railway 會自動映射 PORT 環境變數
-# 但 MediaMTX 需要明確指定埠號
-# 預設 RTMP: 1935, HLS: 8888, WebRTC: 8889
-
 # 暴露必要的埠號 (僅供文件參考，實際需在 Railway 設定)
 EXPOSE 1935 8888 8889
 

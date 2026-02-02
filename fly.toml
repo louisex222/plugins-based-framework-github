@@ -1,0 +1,37 @@
+app = "你的應用程式名稱" # 例如 mediamtx-live
+primary_region = "nrt" # 日本東京 (Narita) 
+
+[build]
+  dockerfile = "mediamtx.Dockerfile"
+
+# WebRTC HTTP 控制服務 (TCP)
+[[services]]
+  protocol = "tcp"
+  internal_port = 8889
+  processes = ["app"]
+
+  [[services.ports]]
+    port = 8889
+    handlers = ["http"]
+
+  [[services.ports]]
+    port = 443
+    handlers = ["tls", "http"]
+
+# WebRTC 串流數據通道 (UDP) - 這是關鍵！
+[[services]]
+  protocol = "udp"
+  internal_port = 8189
+  processes = ["app"]
+
+  [[services.ports]]
+    port = 8189
+
+# 如果你也需要 RTMP (TCP 1935)
+[[services]]
+  protocol = "tcp"
+  internal_port = 1935
+  processes = ["app"]
+
+  [[services.ports]]
+    port = 1935
