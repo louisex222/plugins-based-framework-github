@@ -6,7 +6,7 @@ export class ChatService {
    * 驗證串流密鑰
    * @returns 回傳布林值代表驗證是否成功
    */
-  async streamAuth(path: string, action: string, query: string): Promise<{ authorized: boolean; roomSlug?: string; providedKey?: string; expectedKey?: string }> {
+  async streamAuth(path: string, action: string, query: string): Promise<{ authorized: boolean; roomSlug?: string; providedKey?: string; expectedKey?: string; room?: ChatRoom | null }> {
     console.log(`[ChatService] Auth Request - Path: ${path}, Action: ${action}, Query: ${query}`);
     
     if (action !== "publish") return { authorized: true }; 
@@ -33,13 +33,15 @@ export class ChatService {
     // 1. 如果房間不存在，允許推流 (handlePublish 會建立它)
     if (!room) {
       console.log(`[ChatService] 允許新房間推流: ${roomSlug}`);
-      return { authorized: true, roomSlug };
+      return { authorized: true, roomSlug, room: null };
+
     }
 
     // 2. 如果房間存在，但沒有設定金鑰，也允許推流
     if (!room.streamKey) {
       console.log(`[ChatService] 房間 ${roomSlug} 未設金鑰，允許推流`);
-      return { authorized: true, roomSlug };
+      return { authorized: true, roomSlug, room };
+
     }
 
     // 3. 檢查金鑰是否符合
@@ -54,8 +56,10 @@ export class ChatService {
       authorized: isAuthorized, 
       roomSlug, 
       providedKey, 
-      expectedKey: room.streamKey || undefined 
+      expectedKey: room.streamKey || undefined,
+      room
     };
+
   }
 
 
