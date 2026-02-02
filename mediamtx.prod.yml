@@ -10,7 +10,7 @@ writeTimeout: 10s
 # RTMP 設定 (OBS 推流用)
 rtmp: yes
 rtmpAddress: :1935
-rtmpEncryption: no
+rtmpEncryption: yes
 
 # HLS 設定 (網頁播放用)
 hls: yes
