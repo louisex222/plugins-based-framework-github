@@ -1,5 +1,5 @@
 app = "mediamtx-louise-2026"
-primary_region = "nrt" # 日本東京 (Narita) 
+primary_region = "nrt"
 
 [build]
   dockerfile = "mediamtx.Dockerfile"
@@ -7,35 +7,30 @@ primary_region = "nrt" # 日本東京 (Narita)
 [env]
   BACKEND_API_URL = "https://plugins-based-framework-backend-lzav.onrender.com"
 
-
-# WebRTC HTTP 控制服務 (TCP)
 [[services]]
-  protocol = "tcp"
   internal_port = 8889
-  processes = ["app"]
+  protocol = "tcp"
 
   [[services.ports]]
-    port = 8889
     handlers = ["http"]
+    port = 80
 
   [[services.ports]]
-    port = 443
     handlers = ["tls", "http"]
+    port = 443
 
-# WebRTC 串流數據通道 (UDP) - 這是關鍵！
+# WebRTC ICE (UDP)
 [[services]]
   protocol = "udp"
   internal_port = 8189
-  processes = ["app"]
 
   [[services.ports]]
     port = 8189
 
-# 如果你也需要 RTMP (TCP 1935)
+# RTMP (TCP)
 [[services]]
   protocol = "tcp"
   internal_port = 1935
-  processes = ["app"]
 
   [[services.ports]]
     port = 1935

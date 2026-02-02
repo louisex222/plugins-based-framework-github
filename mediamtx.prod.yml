@@ -9,10 +9,10 @@ srt: no
 
 # WebRTC 設定
 webrtc: yes
-# 修正：明確綁定到 0.0.0.0 確保 Fly.io Proxy 可以導向流量
-webrtcAddress: 0.0.0.0:8889
+# 修正：監聽位址改為 :8889 以支援 IPv4 & IPv6 雙棧，這是 Fly.io 要求的
+webrtcAddress: :8889
 webrtcAllowOrigins: ["*"]
-webrtcLocalUDPAddress: 0.0.0.0:8189
+webrtcLocalUDPAddress: :8189
 webrtcICEServers2:
   - url: stun:stun.l.google.com:19302
 
