@@ -3,10 +3,11 @@
  * 統一管理 API 和 Socket 連線 URL
  */
 const getUrlWithProtocol = (url: string | undefined, defaultUrl: string) => {
-  if (!url) return defaultUrl
-  if (url.startsWith('http')) return url
-  return `https://${url}` // <-- 這裡會強制加上 https://
+  if (!url) return defaultUrl.replace(/\/$/, '')
+  const formattedUrl = url.startsWith('http') ? url : `https://${url}`
+  return formattedUrl.replace(/\/$/, '') // 移除末尾斜線
 }
+
 // 判斷是否為生產環境
 const isProd = import.meta.env.PROD
 
