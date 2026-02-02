@@ -27,6 +27,8 @@ webrtcLocalUDPAddress: :8189
 webrtcLocalTCPAddress: :8889
 webrtcICEServers2:
   - url: stun:stun.l.google.com:19302
+# 告訴 MediaMTX 它的對外公網域名，這非常重要！
+webrtcAdditionalHosts: [mediamtx-production-a446.up.railway.app]
 
 # 權限控制 (身份驗證)
 authMethod: http
