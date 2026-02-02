@@ -22,7 +22,7 @@ services:
       - key: JWT_SECRET
         generateValue: true
       - key: CORS_ORIGIN
-        value: https://louisex222.gitlab.io
+        value: https://github.com/louisex222
     healthCheckPath: /health
 
 

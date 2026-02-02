@@ -37,7 +37,13 @@ jobs:
           yarn prisma:generate
           cd client
           yarn install
-
+      - name: Inject Environment Variables
+        run: 
+          echo "VITE_API_URL=${{ secrets.VITE_API_URL }}" >> client/.env 
+          echo "VITE_SOCKET_URL=${{ secrets.VITE_SOCKET_URL }}" >> client/.env
+          echo "VITE_BASE_PATH=${{ secrets.VITE_BASE_PATH }}" >> client/.env
+          echo "VITE_STREAM_URL=${{ secrets.VITE_STREAM_URL }}" >> client/.env
+          
       - name: Build
         run: |
           cd client
