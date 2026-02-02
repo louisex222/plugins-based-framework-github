@@ -19,7 +19,7 @@ primary_region = "nrt"
     port = 1935
 
 # =========================
-# WebRTC ICE (UDP)
+# WebRTC ICE / Media (UDP)
 # =========================
 [[services]]
   protocol = "udp"
@@ -29,7 +29,7 @@ primary_region = "nrt"
     port = 8189
 
 # =========================
-# HLS / Web UI (HTTP)
+# WebRTC Signaling (HTTP)
 # =========================
 [http_service]
   internal_port = 8889

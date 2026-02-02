@@ -1,33 +1,61 @@
-# MediaMTX 全域設定
+############################################
+# Global
+############################################
 logLevel: info
 logDestinations: [stdout]
 
-# 關閉不必要的服務
+############################################
+# Enabled protocols
+############################################
 rtmp: yes
 hls: no
 srt: no
 
-# WebRTC 設定
+############################################
+# WebRTC
+############################################
 webrtc: yes
-# 修正：監聽位址改為 :8889 以支援 IPv4 & IPv6 雙棧，這是 Fly.io 要求的
+
+# WebRTC signaling (HTTP, Fly 會轉 443)
 webrtcAddress: :8889
 webrtcAllowOrigins: ["*"]
-webrtcLocalUDPAddress: :8189
+
+# 強制所有 WebRTC media 走單一 UDP port（Fly 必須）
+webrtcICEUDPMuxAddress: :8189
+
+# STUN
 webrtcICEServers2:
   - url: stun:stun.l.google.com:19302
 
-# 關鍵：告訴伺服器對外域名
-webrtcAdditionalHosts: [mediamtx-louise-2026.fly.dev]
+# 對外可訪問的 domain（避免 SDP 塞內網 IP）
+webrtcAdditionalHosts:
+  - mediamtx-louise-2026.fly.dev
 
-# 權限控制 (身份驗證)
+############################################
+# Authentication (HTTP → Backend)
+############################################
 authMethod: http
-# 注意: $BACKEND_API_URL 將在啟動時由 Docker 替換為實際的後端網址
 authHTTPAddress: $BACKEND_API_URL/api/stream/auth
 
+############################################
+# Paths
+############################################
 paths:
   all_others:
-    # 當推流準備就緒時 (通知後端直播開始)
-    runOnReady: 'curl -m 5 -s -X POST $BACKEND_API_URL/api/stream/publish -H "Content-Type: application/json" -d "{\"slug\":\"$MTX_PATH\"}"'
+    ########################################
+    # On publish (RTMP ready)
+    ########################################
+    runOnReady: >
+      curl -m 5 -s -X POST
+      $BACKEND_API_URL/api/stream/publish
+      -H "Content-Type: application/json"
+      -d "{\"slug\":\"$MTX_PATH\"}"
 
-    # 當推流停止時 (通知後端直播結束)
-    runOnNotReady: 'curl -m 5 -s -X POST $BACKEND_API_URL/api/stream/unpublish -H "Content-Type: application/json" -d "{\"slug\":\"$MTX_PATH\"}"'
+    ########################################
+    # On unpublish (RTMP stop)
+    ########################################
+    runOnNotReady: >
+      curl -m 5 -s -X POST
+      $BACKEND_API_URL/api/stream/unpublish
+      -H "Content-Type: application/json"
+      -d "{\"slug\":\"$MTX_PATH\"}"
