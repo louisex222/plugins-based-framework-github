@@ -42,8 +42,15 @@ export class ChatService {
   async handlePublish(slug: string, io: any): Promise<void> {
     if (!slug) return;
     
-    const roomSlug = slug.startsWith('/') ? slug.split('/').filter(Boolean).pop() : slug.split('/').pop();
+    // 修正：從路徑中提取真正的房間名稱，並移除 /whip 或 /whep 尾綴
+    const roomSlug = slug
+      .replace(/\/(whip|whep)$/, '')
+      .split('/')
+      .filter(Boolean)
+      .pop();
+    
     if (!roomSlug) return;
+
 
     const room = await prisma.chatRoom.findUnique({
       where: { slug: roomSlug }
@@ -74,8 +81,15 @@ export class ChatService {
   async handleUnpublish(slug: string, io: any): Promise<void> {
     if (!slug) return;
     
-    const roomSlug = slug.startsWith('/') ? slug.split('/').filter(Boolean).pop() : slug.split('/').pop();
+    // 修正：從路徑中提取真正的房間名稱，並移除 /whip 或 /whep 尾綴
+    const roomSlug = slug
+      .replace(/\/(whip|whep)$/, '')
+      .split('/')
+      .filter(Boolean)
+      .pop();
+
     if (!roomSlug) return;
+
 
     await prisma.chatRoom.update({
       where: { slug: roomSlug },
