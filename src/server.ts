@@ -41,6 +41,31 @@ app.use('/api', userRoutes);
 
 app.use('/api', serverRoutes);
 
+// --- MediaMTX 串流相關 API ---
+// 認證 API: 預設允許所有連線 (生產環境建議加入金鑰檢查)
+app.post('/api/stream/auth', (req, res) => {
+  console.log('MediaMTX Auth Request:', req.body);
+  res.status(200).send('OK');
+});
+
+// 直播開始通知
+app.post('/api/stream/publish', (req, res) => {
+  const { slug } = req.body;
+  console.log(`直播開始: ${slug}`);
+  // 這裡可以透過 Socket.io 通知所有用戶直播開始
+  io.emit('liveStarted', { slug });
+  res.status(200).json({ status: 'success' });
+});
+
+// 直播結束通知
+app.post('/api/stream/unpublish', (req, res) => {
+  const { slug } = req.body;
+  console.log(`直播結束: ${slug}`);
+  io.emit('liveEnded', { slug });
+  res.status(200).json({ status: 'success' });
+});
+// ----------------------------
+
 // Initialize database and start server
 async function startServer() {
   try {
