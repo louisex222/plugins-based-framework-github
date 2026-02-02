@@ -7,20 +7,34 @@ export class ChatService {
    * @returns 回傳布林值代表驗證是否成功
    */
   async streamAuth(path: string, action: string, query: string): Promise<boolean> {
-    if (action !== "publish") return true;
-    
+    if (action !== "publish") return true; 
+
     const roomSlug = path.startsWith('/') ? path.split('/').filter(Boolean).pop() : path;
     if (!roomSlug) return false;
 
     // MediaMTX 的 query 格式通常是 "key=value&..." 的字串
     const params = new URLSearchParams(query);
     const providedKey = params.get('key');
+    
     const room = await prisma.chatRoom.findUnique({
       where: { slug: roomSlug }
     });
 
-    return !!(room && room.streamKey === providedKey);
+    // 如果房間不存在，則允許推流 (handlePublish 會自動建立它)
+    // 如果房間存在，則必須驗證 streamKey
+    if (!room) {
+      console.log(`[ChatService] 偵測到新房間推流請求: ${roomSlug}, 允許通過以進行自動建立`);
+      return true;
+    }
+
+    const isAuthorized = !room.streamKey || room.streamKey === providedKey;
+    if (!isAuthorized) {
+      console.warn(`[ChatService] 房間 ${roomSlug} 認證失敗: 金鑰不符`);
+    }
+
+    return isAuthorized;
   }
+
 
   /**
    * 處理房間開始直播
