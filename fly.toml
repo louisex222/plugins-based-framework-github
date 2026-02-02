@@ -1,8 +1,12 @@
-app = "你的應用程式名稱" # 例如 mediamtx-live
+app = "mediamtx-louise-2026"
 primary_region = "nrt" # 日本東京 (Narita) 
 
 [build]
   dockerfile = "mediamtx.Dockerfile"
+
+[env]
+  BACKEND_API_URL = "https://plugins-based-framework-backend-lzav.onrender.com"
+
 
 # WebRTC HTTP 控制服務 (TCP)
 [[services]]

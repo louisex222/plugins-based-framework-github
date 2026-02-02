@@ -1,10 +1,23 @@
-webrtc: yes
-webrtcAllowOrigins: ["*"]
-webrtcAddress: :8889
-webrtcLocalUDPAddress: :8189
+# MediaMTX 全域設定
+logLevel: info
+logDestinations: [stdout]
 
-# 告訴 MediaMTX 它的對外公網域名，這非常重要！
-webrtcAdditionalHosts: [${FLY_APP_NAME}.fly.dev]
+# 關閉不必要的服務
+rtmp: yes
+hls: no
+srt: no
+
+# WebRTC 設定
+webrtc: yes
+webrtcAddress: :8889
+webrtcAllowOrigins: ["*"]
+webrtcLocalUDPAddress: :8189
+# 最新版本中不需要 webrtcICEUDP，且欄位名稱已變更或移除
+webrtcICEServers2:
+  - url: stun:stun.l.google.com:19302
+
+# 關鍵：告訴伺服器對外域名
+webrtcAdditionalHosts: [mediamtx-louise-2026.fly.dev]
 
 # 權限控制 (身份驗證)
 authMethod: http
