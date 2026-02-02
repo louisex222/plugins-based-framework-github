@@ -9,8 +9,15 @@ export class ChatService {
   async streamAuth(path: string, action: string, query: string): Promise<boolean> {
     if (action !== "publish") return true; 
 
-    const roomSlug = path.startsWith('/') ? path.split('/').filter(Boolean).pop() : path;
+    // 修正：從路徑中提取真正的房間名稱，並移除 /whip 或 /whep 尾綴
+    const roomSlug = path
+      .replace(/\/(whip|whep)$/, '')
+      .split('/')
+      .filter(Boolean)
+      .pop();
+
     if (!roomSlug) return false;
+
 
     // MediaMTX 的 query 格式通常是 "key=value&..." 的字串
     const params = new URLSearchParams(query);
