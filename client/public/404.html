@@ -1,0 +1,14 @@
+<!-- client/public/404.html 或 build 後 dist/404.html -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="refresh" content="0; url=/" />
+  </head>
+  <body>
+    <p>Redirecting ... </p>
+    <script>
+      var path = window.location.pathname.replace(/^\/plugins-based-framework-github.io/, "");
+      window.location.replace("/plugins-based-framework-github.io/" + "#" + path + window.location.search + window.location.hash);
+    </script>
+  </body>
+</html>
