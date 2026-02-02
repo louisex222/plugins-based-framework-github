@@ -1,5 +1,6 @@
 import { Router, Request, Response } from 'express';
 import { ChatService } from '../services/ChatService';
+import prisma from '../../../lib/prisma';
 
 const router = Router();
 const chatService = new ChatService();
@@ -56,6 +57,16 @@ router.post("/stream/unpublish", async (req: Request, res: Response) => {
   } catch (error) {
     console.error('[roomRoutes] unpublish error:', error);
     return res.status(500).end();
+  }
+});
+
+// 偵錯用：列出所有房間 (正式環境建議移除)
+router.get("/debug/rooms", async (req: Request, res: Response) => {
+  try {
+    const rooms = await prisma.chatRoom.findMany();
+    return res.json(rooms.map(r => ({ id: r.id, slug: r.slug, key: r.streamKey })));
+  } catch (error) {
+    return res.status(500).json({ error: (error as Error).message });
   }
 });
 
