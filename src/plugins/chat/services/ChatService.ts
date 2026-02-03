@@ -43,7 +43,7 @@ export class ChatService {
       try {
         const params = new URLSearchParams(rawQuery);
         providedKey = params.get('key') ?? undefined;
-        console.log(rawQuery,params,providedKey);
+        console.log(` test: ${rawQuery},${params},${providedKey}`);
     } catch {
       // ignore
     }
