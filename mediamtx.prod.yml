@@ -8,8 +8,6 @@ logDestinations: [stdout]
 # Enabled protocols
 ############################################
 rtmp: yes
-
-rtmpAddress: :1935
 hls: no
 srt: no
 
@@ -21,9 +19,11 @@ webrtc: yes
 # WebRTC signaling (HTTP, Fly 會轉 443)
 webrtcAddress: :8889
 webrtcAllowOrigins: ["*"]
-
+webrtcICEUDP: false
+webrtcICETCP: yes
+webrtcICEUDPServerByHTTP: yes
 # 強制所有 WebRTC media 走單一 UDP port（Fly 必須）
-webrtcICEUDPMuxAddress: :8189
+# webrtcICEUDPMuxAddress: :8189
 
 # STUN
 webrtcICEServers2:
@@ -37,7 +37,7 @@ webrtcAdditionalHosts:
 # Authentication (HTTP → Backend)
 ############################################
 authMethod: http
-authHTTPAddress: https://plugins-based-framework-backend-lzav.onrender.com/api/stream/auth
+authHTTPAddress: https://plugins-based-framework-backend-lzav.onrender.com/api/stream/auth?path=$path&action=$action&$query
 
 ############################################
 # Paths

@@ -6,39 +6,21 @@ const router = Router();
 const chatService = new ChatService();
 
 // MediaMTX 身份驗證 Webhook
-router.post("/stream/auth", async (req: Request, res: Response) => {
-  try {
-    // MediaMTX (authMethod: http) 會用 POST 並送 JSON body，欄位包含：
-    // user, password, token, ip, action, path, protocol, id, query
-    const { path, action, query, user, password } = req.body ?? {};
-    console.log(`req.body: ${JSON.stringify(req.body)}`);
-    console.log(`test: path: ${path}, action: ${action}, query: ${query}, user: ${user}, password: ${password}`);
-    const { authorized, roomSlug, providedKey, expectedKey, room } =
-      await chatService.streamAuth({ path, action, query, user, password });
+router.get('/stream/auth', (req, res) => {
+  // MediaMTX 透過 ?path=$path&action=$action&$query 傳過來的東西
+  const { path, action, key } = req.query; 
 
-    
-    if (authorized) {
-      return res.status(200).end();
-    }
+  console.log(`[Auth] Path: ${path}, Action: ${action}, Key: ${key}`);
 
-    // 認證失敗日誌（避免只看到 401 不知道原因）
-    const logMsg =
-      `[StreamAuth] Rejected: slug=${roomSlug ?? 'unknown'}, provided=${providedKey || 'none'}, expected=${expectedKey || 'none'}`;
-    console.warn(logMsg);
+  // 這裡的 'key' 就是你推流時 ?key=... 後面的值
+  const EXPECTED_KEY = "sz6ak7swwdgpuxky";
 
-    return res.status(401).json({
-      error: "Invalid stream key",
-      message: "Provide a valid stream key. For WHIP/WHEP, pass it via '?key=...'. For RTMP/RTSP, pass it as password (or user).",
-      debug: {
-        roomSlug,
-        providedKey,
-        expectedKey: expectedKey ? '***' : null, // 不直接回傳真正 key
-        room: room ? { id: room.id, slug: room.slug } : null,
-      },
-    });
-  } catch (error) {
-    console.error('[roomRoutes] auth error:', error);
-    return res.status(500).end();
+  if (key === EXPECTED_KEY) {
+      console.log("Auth Success!");
+      return res.status(200).send("OK");
+  } else {
+      console.warn(`Auth Failed: Provided key [${key}] does not match.`);
+      return res.status(401).send("Unauthorized");
   }
 });
 
@@ -83,5 +65,27 @@ router.get("/debug/rooms", async (req: Request, res: Response) => {
     return res.status(500).json({ error: (error as Error).message });
   }
 });
+let currentNgrokUrl = "Not Updated Yet";
 
+// 1. 接收 Ngrok 網址的 API
+router.post('/system/update-tunnel', (req, res) => {
+    const { url } = req.body;
+    if (url) {
+      // 將 tcp://0.tcp.jp.ngrok.io:12345 轉換成 rtmp://...
+      currentNgrokUrl = url.replace('tcp://', 'rtmp://');
+      console.log(`[System] New RTMP URL: ${currentNgrokUrl}`);
+      return res.status(200).json({ status: "updated", url: currentNgrokUrl });
+  }
+  res.status(400).send("Invalid URL");
+});
+
+// 2. 讓你隨時查看網址的 API (或直接做個簡單網頁)
+// 給你自己看的 API
+router.get('/api/system/get-tunnel', (req, res) => {
+  res.json({ 
+      rtmp_server: currentNgrokUrl,
+      stream_key: "sz6ak7swwdgpuxky",
+      full_url: `${currentNgrokUrl}/admin2?key=sz6ak7swwdgpuxky`
+  });
+});
 export default router;

@@ -1,26 +1,24 @@
-# 第一階段：獲取官方 MediaMTX 二進位檔案
-FROM bluenviron/mediamtx:latest AS mediamtx
+FROM bluenviron/mediamtx:latest-ffmpeg AS mediamtx
 
-# 第二階段：建立執行環境
 FROM alpine:3.18
 
-# 安裝必要的工具：curl (發送 Webhook) 和 gettext (提供 envsubst)
-RUN apk add --no-cache curl gettext
+# 增加 jq 以利處理 JSON (如果 entrypoint 用 grep 則非必要，但建議帶著)
+RUN apk add --no-cache curl gettext jq
 
-# 從第一階段複製 mediamtx 執行檔
 COPY --from=mediamtx /mediamtx /usr/local/bin/mediamtx
+# 同時複製官方的 ffmpeg 相關組件 (若有用到轉碼)
+COPY --from=mediamtx /usr/local/bin/ffmpeg /usr/local/bin/ffmpeg
 
-# 複製自定義配置文件模板
+# 安裝 Ngrok (修正語法)
+RUN curl -s https://ngrok-agent.s3.amazonaws.com/ngrok.asc | tee /etc/apk/keys/ngrok.asc >/dev/null && \
+    echo "https://ngrok-agent.s3.amazonaws.com" >> /etc/apk/repositories && \
+    apk update && apk add ngrok
+
 COPY mediamtx.prod.yml /mediamtx.yml.template
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
-# 建立啟動腳本
-RUN echo '#!/bin/sh' > /entrypoint.sh && \
-    echo 'envsubst < /mediamtx.yml.template > /mediamtx.yml' >> /entrypoint.sh && \
-    echo 'exec /usr/local/bin/mediamtx /mediamtx.yml' >> /entrypoint.sh && \
-    chmod +x /entrypoint.sh
+# 建立 log 檔案避免 ngrok 噴錯
+RUN touch /var/log/ngrok.log && chmod 666 /var/log/ngrok.log
 
-# 暴露必要的埠號 (僅供參考)
-EXPOSE 1935 8889 8189/udp
-
-# 使用自定義啟動腳本
 ENTRYPOINT [ "/entrypoint.sh" ]

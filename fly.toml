@@ -6,31 +6,9 @@ primary_region = "nrt"
 
 [env]
   BACKEND_API_URL = "https://plugins-based-framework-backend-lzav.onrender.com"
-# =========================
-# RTMP (TCP 1935)
-# =========================
-[[services]]
-  protocol = "tcp"
-  internal_port = 1935
-  auto_stop_machines = false
 
-  [[services.ports]]
-    port = 1935
-
-# =========================
-# WebRTC ICE / Media (UDP)
-# =========================
-[[services]]
-  protocol = "udp"
-  internal_port = 8189
-
-  [[services.ports]]
-    port = 8189
-
-# =========================
-# WebRTC Signaling (HTTP)
-# =========================
+# 只需要保留這個，因為 Ngrok 是從內部往外連，不需要 Fly 的 Incoming 埠號
 [http_service]
   internal_port = 8889
   force_https = true
-  auto_stop_machines = false
+  auto_stop_machines = false # 建議設為 false，避免 Ngrok 斷線
