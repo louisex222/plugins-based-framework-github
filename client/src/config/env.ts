@@ -24,7 +24,7 @@ export const SOCKET_URL = isProd
 // 串流伺服器 URL (MediaMTX) - 預設指向 localhost:8889 (WebRTC)
 // 生產環境需設定 VITE_STREAM_URL 為 Railway 的公開網址
 export const STREAM_URL = isProd
-  ? getUrlWithProtocol(import.meta.env.VITE_STREAM_URL, window.location.origin)
+  ? 'https://mediamtx-louise-2026.fly.dev'
   : 'https://mediamtx-louise-2026.fly.dev'
 
 // 其他環境配置
