@@ -44,9 +44,14 @@ export const useLiveStore = create<LiveStore>((set, get) => ({
           const url = streamKey
             ? `${STREAM_URL}/${slug}/whip?key=${streamKey}`
             : `${STREAM_URL}/${slug}/whip`
+          // 保險：同時用 HTTP Basic Auth 傳遞 streamKey（會進到 MediaMTX auth payload 的 password）
+          const authHeader = streamKey ? `Basic ${btoa(`any:${streamKey}`)}` : undefined
           const res = await fetch(url, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/sdp' },
+            headers: {
+              'Content-Type': 'application/sdp',
+              ...(authHeader ? { Authorization: authHeader } : {}),
+            },
             body: pc.localDescription?.sdp,
           })
           if (!res.ok) throw new Error('MediaMTX 拒絕推流連線')
@@ -119,9 +124,13 @@ export const useLiveStore = create<LiveStore>((set, get) => ({
           const url = streamKey
             ? `${STREAM_URL}/${slug}/whep?key=${streamKey}`
             : `${STREAM_URL}/${slug}/whep`
+          const authHeader = streamKey ? `Basic ${btoa(`any:${streamKey}`)}` : undefined
           const res = await fetch(url, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/sdp' },
+            headers: {
+              'Content-Type': 'application/sdp',
+              ...(authHeader ? { Authorization: authHeader } : {}),
+            },
             body: pc.localDescription?.sdp,
           })
 
