@@ -86,6 +86,7 @@ export const LiveRoomPage: React.FC = () => {
     try {
       if (streamkey) {
         const res = await roomGetBySlugApi(streamkey)
+        console.log(res);
         if (res.status === 200) {
           setCurrentRoom(res.data)
         }
@@ -208,7 +209,7 @@ export const LiveRoomPage: React.FC = () => {
               {streamkey ? (
                 <LiveRoomModule
                   slug={streamkey}
-                  streamKey={currentRoom?.streamKey}
+                  streamNumber={currentRoom?.streamKey}
                   username={userData?.name}
                 />
               ) : (

@@ -124,12 +124,11 @@ export const useLiveStore = create<LiveStore>((set, get) => ({
           const url = streamKey
             ? `${STREAM_URL}/${slug}/whep?key=${streamKey}`
             : `${STREAM_URL}/${slug}/whep`
-          const authHeader = streamKey ? `Basic ${btoa(`any:${streamKey}`)}` : undefined
+          // const authHeader = streamKey ? `Basic ${btoa(`any:${streamKey}`)}` : undefined
           const res = await fetch(url, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/sdp',
-              ...(authHeader ? { Authorization: authHeader } : {}),
             },
             body: pc.localDescription?.sdp,
           })

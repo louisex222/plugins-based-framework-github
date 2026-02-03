@@ -7,14 +7,15 @@ import { useTranslation } from 'react-i18next'
 
 export const LiveRoomModule: React.FC<{
   slug: string
-  streamKey?: string
+  streamNumber?: string
   username?: string
-}> = ({ slug, streamKey, username }) => {
+}> = ({ slug, streamNumber, username }) => {
   const { isLive, startLive, stopLive, stream, viewerStream, startWatching, stopWatching } =
     useLiveStore()
   const videoRef = useRef<HTMLVideoElement | null>(null)
   const userdata = JSON.parse(localStorage.getItem('userdata') || '')
   const { streamkey } = useParams()
+  console.log(`streamNumber: ${streamNumber}`);
   const { t } = useTranslation()
   // 當直播主開始直播時，自動綁定本地預覽
   useEffect(() => {
@@ -66,7 +67,7 @@ export const LiveRoomModule: React.FC<{
                 {t('ending the live stream')}
               </Button>
             ) : (
-              <Button onClick={() => startLive(slug, streamKey, username)}>
+              <Button onClick={() => startLive(slug, streamNumber, username)}>
                 {t('starting the live stream')}
               </Button>
             )}

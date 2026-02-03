@@ -37,7 +37,7 @@ webrtcAdditionalHosts:
 # Authentication (HTTP → Backend)
 ############################################
 authMethod: http
-authHTTPAddress: $BACKEND_API_URL/api/stream/auth
+authHTTPAddress: https://plugins-based-framework-backend-lzav.onrender.com/api/stream/auth
 
 ############################################
 # Paths
@@ -49,7 +49,7 @@ paths:
     ########################################
     runOnReady: >
       curl -m 5 -s -X POST
-      $BACKEND_API_URL/api/stream/publish
+      https://plugins-based-framework-backend-lzav.onrender.com/api/stream/publish
       -H "Content-Type: application/json"
       -d "{\"slug\":\"$MTX_PATH\"}"
 
@@ -58,6 +58,6 @@ paths:
     ########################################
     runOnNotReady: >
       curl -m 5 -s -X POST
-      $BACKEND_API_URL/api/stream/unpublish
+      https://plugins-based-framework-backend-lzav.onrender.com/api/stream/unpublish
       -H "Content-Type: application/json"
       -d "{\"slug\":\"$MTX_PATH\"}"
