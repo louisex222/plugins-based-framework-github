@@ -38,11 +38,12 @@ export class ChatService {
       .filter(Boolean)
       .pop();
 
-    // 從 query 解析 key；若沒有，退回 password / user
-    let providedKey: string | undefined;
-    try {
-      const params = new URLSearchParams(rawQuery);
-      providedKey = params.get('key') ?? undefined;
+      // 從 query 解析 key；若沒有，退回 password / user
+      let providedKey: string | undefined;
+      try {
+        const params = new URLSearchParams(rawQuery);
+        providedKey = params.get('key') ?? undefined;
+        console.log(rawQuery,params,providedKey);
     } catch {
       // ignore
     }
