@@ -6,27 +6,34 @@ const router = Router();
 const chatService = new ChatService();
 
 // MediaMTX 身份驗證 Webhook
-router.get("/stream/auth", async (req: Request, res: Response) => {
+router.post("/stream/auth", async (req: Request, res: Response) => {
   try {
-    const { path, action, query, user, password } = req.query;
-    const { authorized, roomSlug, providedKey, expectedKey, room } = await chatService.streamAuth(path as string, action as string, query as string, user as string, password as string);
+    // MediaMTX (authMethod: http) 會用 POST 並送 JSON body，欄位包含：
+    // user, password, token, ip, action, path, protocol, id, query
+    const { path, action, query, user, password } = req.body ?? {};
+    const { authorized, roomSlug, providedKey, expectedKey, room } =
+      await chatService.streamAuth({ path, action, query, user, password });
 
     
     if (authorized) {
       return res.status(200).end();
     }
-    
-    // 認證失敗日誌
-    const logMsg = `[StreamAuth] Rejected: slug=${roomSlug}, provided=${providedKey || 'none'}, expected=${expectedKey || 'none'}`;
+
+    // 認證失敗日誌（避免只看到 401 不知道原因）
+    const logMsg =
+      `[StreamAuth] Rejected: slug=${roomSlug ?? 'unknown'}, provided=${providedKey || 'none'}, expected=${expectedKey || 'none'}`;
     console.warn(logMsg);
 
-    return res.status(401).json({ 
+    return res.status(401).json({
       error: "Invalid stream key",
-      message: "Please provide a valid stream key via '?key=...' query parameter, Basic Auth, or path suffix (e.g., room/key).",
-      debug: { roomSlug, providedKey, room: room ? { id: room.id, slug: room.slug } : null } 
+      message: "Provide a valid stream key. For WHIP/WHEP, pass it via '?key=...'. For RTMP/RTSP, pass it as password (or user).",
+      debug: {
+        roomSlug,
+        providedKey,
+        expectedKey: expectedKey ? '***' : null, // 不直接回傳真正 key
+        room: room ? { id: room.id, slug: room.slug } : null,
+      },
     });
-
-
   } catch (error) {
     console.error('[roomRoutes] auth error:', error);
     return res.status(500).end();

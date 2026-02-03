@@ -6,68 +6,67 @@ export class ChatService {
    * 驗證串流密鑰
    * @returns 回傳布林值代表驗證是否成功
    */
-  async streamAuth(
-    path: string, 
-    action: string, 
-    query: string, 
-    user?: string, 
-    password?: string
-  ): Promise<{ authorized: boolean; roomSlug?: string; providedKey?: string; expectedKey?: string; room?: ChatRoom | null }> {
-    console.log(`[ChatService] Auth Request - Path: ${path}, Action: ${action}, Query: ${query}, User: ${user}, Pwd: ${password}`);
+  async streamAuth(input: {
+    path?: string;
+    action?: string;
+    query?: string;
+    user?: string;
+    password?: string;
+    key?: string;
+  } | string): Promise<{
+    authorized: boolean;
+    roomSlug?: string;
+    providedKey?: string;
+    expectedKey?: string;
+    room?: ChatRoom | null;
+  }> {
+    // ---- normalize input ----
+    const payload =
+      typeof input === 'string'
+        ? { query: input, key: input }
+        : (input ?? {});
 
-    
-    if (action !== "publish") return { authorized: true }; 
+    const rawPath = (payload.path ?? '').toString();
+    const rawQuery = (payload.query ?? payload.key ?? '').toString(); // MediaMTX 會提供 query，例如 "key=xxx"
+    const user = payload.user?.toString();
+    const password = payload.password?.toString();
 
-    // 路徑解析：支援 room 或 room/key
-    const pathParts = path
-      .replace(/\/(whip|whep|hls|rtmp)$/i, '')
+    // 由 path 推導 room slug（與 publish/unpublish 同邏輯）
+    const roomSlug = rawPath
+      .replace(/\/(whip|whep)$/, '')
       .split('/')
-      .filter(Boolean);
+      .filter(Boolean)
+      .pop();
 
-    const roomSlug = pathParts[0];
-    let pathKey = pathParts.length > 1 ? pathParts[1] : undefined;
+    // 從 query 解析 key；若沒有，退回 password / user
+    let providedKey: string | undefined;
+    try {
+      const params = new URLSearchParams(rawQuery);
+      providedKey = params.get('key') ?? undefined;
+    } catch {
+      // ignore
+    }
+    providedKey = providedKey || password || user || undefined;
+
+    console.log(
+      `[ChatService] StreamAuth req: path="${rawPath}" slug="${roomSlug ?? ''}" action="${payload.action ?? ''}" provided="${providedKey ? '***' : 'none'}"`
+    );
 
     if (!roomSlug) {
-      console.error(`[ChatService] 無法解析房間 Slug: ${path}`);
-      return { authorized: false, roomSlug: '' };
+      return { authorized: false, roomSlug: '', providedKey };
     }
-
-    const params = new URLSearchParams(query);
-    // 優先序：URL 參數 key > HTTP Basic Auth Password > HTTP Basic Auth Username > Path Key
-    const providedKey = params.get('key') || password || user || pathKey;
 
     const room = await prisma.chatRoom.findUnique({
-      where: { slug: roomSlug }
+      where: { slug: roomSlug },
     });
 
-    // 1. 如果房間不存在，允許推流 (handlePublish 會建立它)
-    if (!room) {
-      console.log(`[ChatService] 允許新房間推流: ${roomSlug}`);
-      return { authorized: true, roomSlug, room: null };
+    const expectedKey = room?.streamKey ?? undefined;
+    if (!expectedKey || !providedKey) {
+      return { authorized: false, roomSlug, providedKey, expectedKey, room };
     }
 
-    // 2. 如果房間存在，但沒有設定金鑰，也允許推流
-    if (!room.streamKey) {
-      console.log(`[ChatService] 房間 ${roomSlug} 未設金鑰，允許推流`);
-      return { authorized: true, roomSlug, room };
-    }
-
-    // 3. 檢查金鑰是否符合
-    const isAuthorized = room.streamKey === providedKey;
-    if (!isAuthorized) {
-      console.warn(`[ChatService] 房間 ${roomSlug} 認證失敗: 預期 ${room.streamKey}, 收到 ${providedKey || 'undefined'}`);
-    } else {
-      console.log(`[ChatService] 房間 ${roomSlug} 認證成功`);
-    }
-
-    return { 
-      authorized: isAuthorized, 
-      roomSlug, 
-      providedKey, 
-      expectedKey: room.streamKey || undefined,
-      room
-    };
-
+    const authorized = providedKey === expectedKey;
+    return { authorized, roomSlug, providedKey, expectedKey, room };
   }
 
 

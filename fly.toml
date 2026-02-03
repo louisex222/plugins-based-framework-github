@@ -6,7 +6,6 @@ primary_region = "nrt"
 
 [env]
   BACKEND_API_URL = "https://plugins-based-framework-backend-lzav.onrender.com"
-  MTX_AUTHHTTPADDRESS = "https://plugins-based-framework-backend-lzav.onrender.com/api/stream/auth?key=$query_key&path=$path"
 # =========================
 # RTMP (TCP 1935)
 # =========================
