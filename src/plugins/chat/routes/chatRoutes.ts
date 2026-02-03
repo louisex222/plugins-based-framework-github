@@ -11,7 +11,7 @@ router.post("/stream/auth", async (req: Request, res: Response) => {
     // MediaMTX (authMethod: http) 會用 POST 並送 JSON body，欄位包含：
     // user, password, token, ip, action, path, protocol, id, query
     const { path, action, query, user, password } = req.body ?? {};
-    console.log(`req.body: ${req.body}`);
+    console.log(`req.body: ${JSON.stringify(req.body)}`);
     console.log(`test: path: ${path}, action: ${action}, query: ${query}, user: ${user}, password: ${password}`);
     const { authorized, roomSlug, providedKey, expectedKey, room } =
       await chatService.streamAuth({ path, action, query, user, password });
